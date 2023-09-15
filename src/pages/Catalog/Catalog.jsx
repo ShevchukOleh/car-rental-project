@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { CarImage, Container, Tags, List, ListItem, PriceText, Title, TitleContainer, TagsItem, LearnMoreButton, HeartImage, ImageContainer } from "./Catalog.styled";
-import heartImage from '../../images/heart.svg'
 import { ReactSVG } from "react-svg";
-import { CarInfoModal } from "components/CarInfoModal/CarInfoModal";
+import { CarImage, Container, Tags, List, ListItem, PriceText, Title, TitleContainer, TagsItem, LearnMoreButton, HeartImage, ImageContainer } from "./Catalog.styled";
 import fetchCars from "API/fetchCar";
+import { FilterByBrand } from "components/Filter/FilterByBrand";
+import { MileageRangeFilter } from "components/Filter/FilterByMileage";
+import { FilterByPrice } from "components/Filter/FilterByPrice";
+import { CarInfoModal } from "components/CarInfoModal/CarInfoModal";
+import heartImage from '../../images/heart.svg'
 
 export const Catalog = () => {
   const [cars, setCars] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCar, setSelectedCar] = useState(null);
+  const [selectedBrand, setSelectedBrand] = useState('');
+  const [selectedPrice, setSelectedPrice] = useState('');
+  const [mileageRange, setMileageRange] = useState({ minMileage: '', maxMileage: '' });
 
   useEffect(() => {
     fetchCars()
@@ -16,10 +22,52 @@ export const Catalog = () => {
         setCars(data); 
       })
       .catch((error) => {
-        console.error("Помилка:", error);
+        console.error("error:", error);
       });
   }, []);
 
+  useEffect(() => {
+    const savedBrand = localStorage.getItem('selectedBrand');
+    if (savedBrand) {
+      setSelectedBrand(savedBrand);
+    }
+    const savedPrice = localStorage.getItem('selectedPrice');
+    if (savedPrice) {
+      setSelectedPrice(savedPrice);
+    }
+    const savedMileageRange = localStorage.getItem('selectedMileageRange');
+    if (savedMileageRange) {
+      setMileageRange(JSON.parse(savedMileageRange));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('selectedMileageRange', JSON.stringify(mileageRange));
+  }, [mileageRange]);
+
+  const handleBrandChange = (brand) => {
+    setSelectedBrand(brand);
+    localStorage.setItem('selectedBrand', brand);
+  };
+
+  const handlePriceChange = (price) => {
+    setSelectedPrice(price);
+    localStorage.setItem('selectedPrice', price);
+  };
+
+  const handleMileageChange = (mileageRange) => {
+    setMileageRange(mileageRange);
+    localStorage.setItem('selectedMileageRange', JSON.stringify(mileageRange));
+  };
+
+  const handleDeleteFilters = () => {
+    localStorage.removeItem('selectedBrand');
+    localStorage.removeItem('selectedPrice');
+    localStorage.removeItem('selectedMileageRange')
+    setSelectedBrand('');
+    setSelectedPrice('');
+    setMileageRange({ minMileage: '', maxMileage: '' });
+  };
 
   const handleLearnMoreClick = (car) => {
     setSelectedCar(car);
@@ -31,10 +79,32 @@ export const Catalog = () => {
     setIsModalOpen(false);
   };
 
+  const filteredCars = cars.filter((car) => {
+    if (selectedBrand && car.make !== selectedBrand) {
+      return false;
+    }
+    if (selectedPrice) {
+      if (car.rentalPrice && parseFloat(car.rentalPrice.slice(1)) > parseFloat(selectedPrice)) {
+        return false;
+      }
+    }
+    if (mileageRange.minMileage && car.mileage <= parseFloat(mileageRange.minMileage)) {
+      return false;
+    }
+    if (mileageRange.maxMileage && car.mileage >= parseFloat(mileageRange.maxMileage)) {
+      return false;
+    }
+    return true;
+  });
+
   return (
     <Container>
+      <FilterByBrand cars={cars} onBrandChange={handleBrandChange} selectedBrand={selectedBrand} />
+      <FilterByPrice onPriceChange={handlePriceChange} selectedPrice={selectedPrice} />
+      <MileageRangeFilter onMileageChange={handleMileageChange} mileageRange={mileageRange} />
+      <button onClick={handleDeleteFilters}>Reset</button>
       <List>
-        {cars.map((car) => (
+        {filteredCars.map((car) => (
           <ListItem key={car.id}>
             <div>
               <ImageContainer>
