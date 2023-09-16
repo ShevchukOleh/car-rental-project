@@ -3,7 +3,11 @@
 export const Favorites = () => {
 //   useEffect(() => {
 //     fetchCars();
-//   }, []);
+  //   }, []);
+  // const savedFavorites = localStorage.getItem('favorites');
+  // if (savedFavorites) {
+  //   setFavorites(JSON.parse(savedFavorites));
+  // }
 
   return (
     <div>

@@ -15,6 +15,9 @@ export const Catalog = () => {
   const [selectedBrand, setSelectedBrand] = useState('');
   const [selectedPrice, setSelectedPrice] = useState('');
   const [mileageRange, setMileageRange] = useState({ minMileage: '', maxMileage: '' });
+  const [visibleCars, setVisibleCars] = useState(8);
+  const [showLoadMore, setShowLoadMore] = useState(true);
+  const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
     fetchCars()
@@ -79,6 +82,32 @@ export const Catalog = () => {
     setIsModalOpen(false);
   };
 
+  const handleLoadMore = () => {
+    const totalCars = filteredCars.length;
+    const newVisibleCars = visibleCars + 8;
+
+    if (newVisibleCars >= totalCars) {
+      setVisibleCars(totalCars);
+      setShowLoadMore(false);
+    } else {
+      setVisibleCars(newVisibleCars);
+    }
+  };
+
+  const toggleFavorite = (car) => {
+    const isFavorite = favorites.some((favoriteCar) => favoriteCar.id === car.id);
+
+    if (isFavorite) {
+      const updatedFavorites = favorites.filter((favoriteCar) => favoriteCar.id !== car.id);
+      setFavorites(updatedFavorites);
+      localStorage.removeItem('favorites', JSON.stringify(updatedFavorites));
+    } else {
+      const updatedFavorites = [...favorites, car];
+      setFavorites(updatedFavorites);
+      localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+    }
+  };
+
   const filteredCars = cars.filter((car) => {
     if (selectedBrand && car.make !== selectedBrand) {
       return false;
@@ -104,13 +133,17 @@ export const Catalog = () => {
       <MileageRangeFilter onMileageChange={handleMileageChange} mileageRange={mileageRange} />
       <button onClick={handleDeleteFilters}>Reset</button>
       <List>
-        {filteredCars.map((car) => (
+        {filteredCars.slice(0, visibleCars).map((car) => (
           <ListItem key={car.id}>
             <div>
               <ImageContainer>
                 <CarImage src={car.img} alt={car.make} />
-                <HeartImage>
-                  <ReactSVG src={heartImage} style={{width: 18, height: 18, fill: 'none', stroke: '#FFFFFFCC'}}/>
+                <HeartImage onClick={() => toggleFavorite(car)}>
+                  <ReactSVG src={heartImage} style={{
+                    width: 18, height: 18,
+                    fill: favorites.some((favoriteCar) => favoriteCar.id === car.id) ? 'red' : 'none', 
+                    stroke: '#FFFFFFCC',
+                  }}/>
                 </HeartImage>
               </ImageContainer>
               <TitleContainer>
@@ -130,6 +163,7 @@ export const Catalog = () => {
           </ListItem>
         ))}
       </List>
+      {showLoadMore && (<button onClick={handleLoadMore}>Load more</button>)}
       <CarInfoModal isOpen={isModalOpen} onClose={handleCloseModal} car={selectedCar} />
     </Container>
   );
