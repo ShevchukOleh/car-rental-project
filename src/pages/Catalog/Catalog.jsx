@@ -134,6 +134,14 @@ export const Catalog = () => {
     }
   };
 
+  useEffect(() => {
+    if (visibleCars >= filteredCars.length) {
+      setShowLoadMore(false);
+    } else {
+      setShowLoadMore(true);
+    }
+  }, [visibleCars, filteredCars]);
+
   return (
     <Container>
       <div style={{display: 'flex', gap: '18px', marginBottom: '50px', justifyContent: 'center', alignItems: 'center'}}>
