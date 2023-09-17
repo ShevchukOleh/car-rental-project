@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Input, Label, Span } from "./Filter.styled";
 
 export const MileageRangeFilter = ({ onMileageChange, mileageRange }) => {
   const [minMileage, setMinMileage] = useState('');
@@ -17,20 +18,31 @@ export const MileageRangeFilter = ({ onMileageChange, mileageRange }) => {
   };
 
   return (
-    <div>
-      <input
-        type="number"
-        id="minMileage"
-        value={mileageRange.minMileage}
-        onChange={handleMinMileageChange}
-      />
+    <div style={{ display: 'grid' }}>
+      <Label htmlFor="">Сar mileage / km</Label>
+      <div style={{display: 'flex'}}>
+        <div style={{display: 'block', position: 'relative'}}>
+          <Input
+            style={{borderTopLeftRadius: '14px', borderBottomLeftRadius: '14px', borderRight: '1px solid #8A8A8933'}}
+            type="number"
+            id="minMileage"
+            value={mileageRange.minMileage}
+            onChange={handleMinMileageChange}
+          />
+          <Span>From</Span>
+        </div>
 
-      <input
-        type="number"
-        id="maxMileage"
-        value={mileageRange.maxMileage}
-        onChange={handleMaxMileageChange}
-      />
+        <div style={{display: 'block', position: 'relative'}}>
+          <Input
+            style={{borderTopRightRadius: '14px', borderBottomRightRadius: '14px', borderLeft: '1px solid #8A8A8933'}}
+            type="number"
+            id="maxMileage"
+            value={mileageRange.maxMileage}
+            onChange={handleMaxMileageChange}
+          />
+          <Span>To</Span>
+        </div>
+      </div>
     </div>
   );
 };

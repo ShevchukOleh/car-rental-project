@@ -35,6 +35,7 @@ export const HeartImage = styled.div`
     right: 14px;
     width: 18px;
     height: 18px;
+    cursor: pointer;
 `
 
 export const Heart =styled
@@ -92,5 +93,21 @@ export const LearnMoreButton = styled.button`
     transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1);
     &:hover{
         background-color: #0B44CD;
+    }
+`
+export const LoadMoreButton = styled.button`
+    border: none;
+    font-family: 'Manrope';
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.5;
+    background-color: transparent;
+    width: 100px;
+    height: 30px;
+    color: #3470FF;
+    margin-top: 100px;
+    transition: color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    &:hover{
+        color: #0B44CD; 
     }
 `

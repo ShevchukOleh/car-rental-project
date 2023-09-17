@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ReactSVG } from "react-svg";
-import { CarImage, Container, Tags, List, ListItem, PriceText, Title, TitleContainer, TagsItem, LearnMoreButton, HeartImage, ImageContainer } from "./Catalog.styled";
+import { CarImage, Container, Tags, List, ListItem, PriceText, Title, TitleContainer, TagsItem, LearnMoreButton, HeartImage, ImageContainer, LoadMoreButton } from "./Catalog.styled";
 import fetchCars from "API/fetchCar";
 import { FilterByBrand } from "components/Filter/FilterByBrand";
 import { MileageRangeFilter } from "components/Filter/FilterByMileage";
@@ -128,10 +128,12 @@ export const Catalog = () => {
 
   return (
     <Container>
-      <FilterByBrand cars={cars} onBrandChange={handleBrandChange} selectedBrand={selectedBrand} />
-      <FilterByPrice onPriceChange={handlePriceChange} selectedPrice={selectedPrice} />
-      <MileageRangeFilter onMileageChange={handleMileageChange} mileageRange={mileageRange} />
-      <button onClick={handleDeleteFilters}>Reset</button>
+      <div style={{display: 'flex', gap: '18px', marginBottom: '50px', justifyContent: 'center'}}>
+        <FilterByBrand cars={cars} onBrandChange={handleBrandChange} selectedBrand={selectedBrand} />
+        <FilterByPrice onPriceChange={handlePriceChange} selectedPrice={selectedPrice} />
+        <MileageRangeFilter onMileageChange={handleMileageChange} mileageRange={mileageRange} />
+        <button onClick={handleDeleteFilters}>Reset</button>
+      </div>
       <List>
         {filteredCars.slice(0, visibleCars).map((car) => (
           <ListItem key={car.id}>
@@ -141,8 +143,8 @@ export const Catalog = () => {
                 <HeartImage onClick={() => toggleFavorite(car)}>
                   <ReactSVG src={heartImage} style={{
                     width: 18, height: 18,
-                    fill: favorites.some((favoriteCar) => favoriteCar.id === car.id) ? 'red' : 'none', 
-                    stroke: '#FFFFFFCC',
+                    fill: favorites.some((favoriteCar) => favoriteCar.id === car.id) ? '#3470FF' : 'none', 
+                    stroke: favorites.some((favoriteCar) => favoriteCar.id === car.id) ? '#3470FF' : '#FFFFFFCC',
                   }}/>
                 </HeartImage>
               </ImageContainer>
@@ -163,7 +165,9 @@ export const Catalog = () => {
           </ListItem>
         ))}
       </List>
-      {showLoadMore && (<button onClick={handleLoadMore}>Load more</button>)}
+      <div style={{display:'flex', justifyContent: 'center'}}>
+        {showLoadMore && (<LoadMoreButton onClick={handleLoadMore}>Load more</LoadMoreButton>)}
+      </div>
       <CarInfoModal isOpen={isModalOpen} onClose={handleCloseModal} car={selectedCar} />
     </Container>
   );
