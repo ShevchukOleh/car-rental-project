@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-    padding: 150px 129px;
+    padding: 50px 129px;
     background-color: #fff;
 `
 export const List = styled.ul`
@@ -37,9 +37,6 @@ export const HeartImage = styled.div`
     height: 18px;
     cursor: pointer;
 `
-
-export const Heart =styled
-
 export const TitleContainer = styled.div`
     display: flex;
     align-items: center;
@@ -105,7 +102,7 @@ export const LoadMoreButton = styled.button`
     width: 100px;
     height: 30px;
     color: #3470FF;
-    margin-top: 100px;
+    margin-top: 50px;
     transition: color 250ms cubic-bezier(0.4, 0, 0.2, 1);
     &:hover{
         color: #0B44CD; 

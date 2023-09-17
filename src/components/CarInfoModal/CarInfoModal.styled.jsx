@@ -18,6 +18,8 @@ export const Modal = styled.div`
     background-color: #fff;
     padding: 40px;
     border-radius: 24px;
+    overflow-y: auto;
+    max-height: 90vh;
 `
 export const CarImage = styled.img`
     width: 100%;

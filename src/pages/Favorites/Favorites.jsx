@@ -1,5 +1,5 @@
 import { CarImage } from "components/CarInfoModal/CarInfoModal.styled";
-import { HeartImage, ImageContainer, LearnMoreButton, List, ListItem, PriceText, Tags, TagsItem, Title, TitleContainer } from "pages/Catalog/Catalog.styled";
+import { Container, HeartImage, ImageContainer, LearnMoreButton, List, ListItem, PriceText, Tags, TagsItem, Title, TitleContainer } from "pages/Catalog/Catalog.styled";
 import { useEffect, useState } from "react";
 import { ReactSVG } from "react-svg";
 import heartImage from '../../images/heart.svg'
@@ -41,7 +41,7 @@ export const Favorites = () => {
   
 
   return (
-    <div>
+    <Container>
       <List>
         {favorites.map((car) => (
           <ListItem key={car.id}>
@@ -74,6 +74,6 @@ export const Favorites = () => {
         ))}
       </List>
       <CarInfoModal isOpen={isModalOpen} onClose={handleCloseModal} car={selectedCar} />
-    </div>
+    </Container>
   );
 };

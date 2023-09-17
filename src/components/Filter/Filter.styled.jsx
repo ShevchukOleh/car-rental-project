@@ -22,7 +22,7 @@ export const Label = styled.label`
   margin-bottom: 8px;
 `
 export const Input = styled.input`
-  width: 160px;
+  width: 120px;
   padding: 14px 14px 14px 80px;
   color: #121417;
   border: none;

@@ -25,13 +25,12 @@ export const Catalog = () => {
 
     fetchCars()
       .then((data) => {
-        setCars(data); 
+        setCars(data);
       })
       .catch((error) => {
         console.error("error:", error);
       });
   }, []);
-
 
   useEffect(() => {
     const savedBrand = localStorage.getItem('selectedBrand');
@@ -79,23 +78,13 @@ export const Catalog = () => {
   const handleLearnMoreClick = (car) => {
     setSelectedCar(car);
     setIsModalOpen(true);
+    document.body.style.overflow = "hidden";
   };
 
   const handleCloseModal = () => {
     setSelectedCar(null);
     setIsModalOpen(false);
-  };
-
-  const handleLoadMore = () => {
-    const totalCars = filteredCars.length;
-    const newVisibleCars = visibleCars + 8;
-
-    if (newVisibleCars >= totalCars) {
-      setVisibleCars(totalCars);
-      setShowLoadMore(false);
-    } else {
-      setVisibleCars(newVisibleCars);
-    }
+    document.body.style.overflow = "auto";
   };
 
   const toggleFavorite = (car) => {
@@ -133,13 +122,25 @@ export const Catalog = () => {
     return true;
   });
 
+  const handleLoadMore = () => {
+    const totalCars = filteredCars.length;
+    const newVisibleCars = visibleCars + 8;
+
+    if (newVisibleCars >= totalCars) {
+      setVisibleCars(totalCars);
+      setShowLoadMore(false);
+    } else {
+      setVisibleCars(newVisibleCars);
+    }
+  };
+
   return (
     <Container>
-      <div style={{display: 'flex', gap: '18px', marginBottom: '50px', justifyContent: 'center'}}>
+      <div style={{display: 'flex', gap: '18px', marginBottom: '50px', justifyContent: 'center', alignItems: 'center'}}>
         <FilterByBrand cars={cars} onBrandChange={handleBrandChange} selectedBrand={selectedBrand} />
         <FilterByPrice onPriceChange={handlePriceChange} selectedPrice={selectedPrice} />
         <MileageRangeFilter onMileageChange={handleMileageChange} mileageRange={mileageRange} />
-        <button onClick={handleDeleteFilters}>Reset</button>
+        <LearnMoreButton onClick={handleDeleteFilters} style={{width: '136px', height: '48px'}}>Reset</LearnMoreButton>
       </div>
       <List>
         {filteredCars.slice(0, visibleCars).map((car) => (
