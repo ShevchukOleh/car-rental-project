@@ -18,17 +18,15 @@ export const Favorites = () => {
   }, []);
 
   const toggleFavorite = (car) => {
-    const isFavorite = favorites.some((favoriteCar) => favoriteCar.id === car.id);
+    const storedFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
+  
+    const isFavorite = storedFavorites.some((favoriteCar) => favoriteCar.id === car.id);
 
     if (isFavorite) {
-      const updatedFavorites = favorites.filter((favoriteCar) => favoriteCar.id !== car.id);
-      setFavorites(updatedFavorites);
-      localStorage.removeItem('favorites', JSON.stringify(updatedFavorites));
-    } else {
-      const updatedFavorites = [...favorites, car];
-      setFavorites(updatedFavorites);
+      const updatedFavorites = storedFavorites.filter((favoriteCar) => favoriteCar.id !== car.id);  
       localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
-    }
+      setFavorites(updatedFavorites);
+    } 
   };
 
   const handleLearnMoreClick = (car) => {
@@ -53,8 +51,8 @@ export const Favorites = () => {
                 <HeartImage onClick={() => toggleFavorite(car)}>
                   <ReactSVG src={heartImage} style={{
                     width: 18, height: 18,
-                    fill: favorites.some((favoriteCar) => favoriteCar.id === car.id) ? '#3470FF' : 'none', 
-                    stroke: favorites.some((favoriteCar) => favoriteCar.id === car.id) ? '#3470FF' : '#FFFFFFCC',
+                    fill: '#3470FF', 
+                    stroke: '#3470FF',
                   }}/>
                 </HeartImage>
               </ImageContainer>

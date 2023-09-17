@@ -20,6 +20,9 @@ export const Catalog = () => {
   const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
+    const storedFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    setFavorites(storedFavorites);
+
     fetchCars()
       .then((data) => {
         setCars(data); 
@@ -28,6 +31,7 @@ export const Catalog = () => {
         console.error("error:", error);
       });
   }, []);
+
 
   useEffect(() => {
     const savedBrand = localStorage.getItem('selectedBrand');
@@ -95,16 +99,19 @@ export const Catalog = () => {
   };
 
   const toggleFavorite = (car) => {
-    const isFavorite = favorites.some((favoriteCar) => favoriteCar.id === car.id);
+    const storedFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
+  
+    const isFavorite = storedFavorites.some((favoriteCar) => favoriteCar.id === car.id);
 
     if (isFavorite) {
-      const updatedFavorites = favorites.filter((favoriteCar) => favoriteCar.id !== car.id);
-      setFavorites(updatedFavorites);
-      localStorage.removeItem('favorites', JSON.stringify(updatedFavorites));
-    } else {
-      const updatedFavorites = [...favorites, car];
-      setFavorites(updatedFavorites);
+      const updatedFavorites = storedFavorites.filter((favoriteCar) => favoriteCar.id !== car.id);  
       localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+      setFavorites(updatedFavorites);
+    } else {
+      const updatedFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
+      updatedFavorites.push(car)
+      localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+      setFavorites(updatedFavorites);
     }
   };
 
